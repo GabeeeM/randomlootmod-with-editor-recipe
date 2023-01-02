@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "@K@",
+	  "@@@"
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:smooth_stone_slab"
+        },
+	  "K": {
+			"item": "minecraft:crafting_table"
+	  },
+	  "@": {
+			"item": "randomloot:random_cluster"
+	  }
+    },
+    "result": {
+        "item": "randomloot:editor",
+        "count": 1
+    }
+}
