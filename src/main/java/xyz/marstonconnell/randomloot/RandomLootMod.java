@@ -158,35 +158,34 @@ public class RandomLootMod {
 
 	@SubscribeEvent
 	public void entityDrop(LivingDropsEvent event) {
-		if (event.getEntity().getEntityWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-			if (!(event.getSource() instanceof EntityDamageSource)
-					|| !(((EntityDamageSource) event.getSource()).getTrueSource() instanceof PlayerEntity)
-					|| !(((EntityDamageSource) event.getSource()).getTrueSource() instanceof PlayerEntity))
-				return;
+	    if (!event.getEntity().getEntityWorld().getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
+		return;
+	    }
 
-			int choice = RandomLootMod.rand.nextInt(1000);
-			int range = 0;
+	    Entity trueSource = event.getSource().getTrueSource();
+	    if (!(event.getSource() instanceof EntityDamageSource)
+		    || !(trueSource instanceof PlayerEntity)) {
+		return;
+	    }
 
-			if (event.getEntity() instanceof MonsterEntity) {
-				range = Config.MONSTERS_DROP.get();
-			} else if (event.getEntity() instanceof AnimalEntity) {
-				range = Config.ANIMAL_DROP.get();
-			}
+	    int choice = RandomLootMod.rand.nextInt(1000);
 
-			if (!event.getEntity().isNonBoss()) {
-				range = Config.BOSS_DROP.get();
-			}
+	    int range = 0;
+	    if (event.getEntity() instanceof MonsterEntity) {
+		range = Config.MONSTERS_DROP.get();
+	    } else if (event.getEntity() instanceof AnimalEntity) {
+		range = Config.ANIMAL_DROP.get();
+	    } else if (!event.getEntity().isNonBoss()) {
+		range = Config.BOSS_DROP.get();
+	    }
 
-			if (choice < range) {
-				WeightedChooser<Item> cases = new WeightedChooser<Item>();
-				cases.addChoice(RLItems.BASIC_ITEM_CASE, Config.BASIC_CHANCE.get());
-				cases.addChoice(RLItems.BETTER_ITEM_CASE, Config.GOLD_CHANCE.get());
-				cases.addChoice(RLItems.BEST_ITEM_CASE, Config.TITAN_CHANCE.get());
-				event.getEntity().entityDropItem(new ItemStack(cases.getRandomObject()));
-			}
-
-		}
-
+	    if (choice < range) {
+		WeightedChooser<Item> cases = new WeightedChooser<>();
+		cases.addChoice(RLItems.BASIC_ITEM_CASE, Config.BASIC_CHANCE.get());
+		cases.addChoice(RLItems.BETTER_ITEM_CASE, Config.GOLD_CHANCE.get());
+		cases.addChoice(RLItems.BEST_ITEM_CASE, Config.TITAN_CHANCE.get());
+		event.getEntity().entityDropItem(new ItemStack(cases.getRandomObject()));
+	    }
 	}
 
 	// You can use SubscribeEvent and let the Event Bus discover methods to call
